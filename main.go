@@ -23,8 +23,8 @@ func newMusic(title, compositor, interpreter string) Music {
 func main() {
 	db := setupDB()
 	if len(os.Args) < 2 {
-		fmt.Println("Provide a valid option\n")
-		fmt.Println("-list\n-add\n-sh (search)\n")
+		fmt.Print("Provide a valid option\n\n")
+		fmt.Print("-list\n-add\n-sh (search)\n\n")
 		os.Exit(1)
 	}
 	switch os.Args[1] {
