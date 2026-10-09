@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -24,10 +25,12 @@ func main() {
 	db := setupDB()
 	if len(os.Args) < 2 {
 		fmt.Print("Provide a valid option\n\n")
-		fmt.Print("-list\n-add\n-sh (search)\n\n")
+		fmt.Print("-list\n-add\n-sh (search)\n-rm\n\n")
 		os.Exit(1)
 	}
 	switch os.Args[1] {
+	case "rm":
+		remove(db)
 	case "list":
 		listAll(db)
 	case "add":
@@ -37,6 +40,29 @@ func main() {
 	default:
 		invalidAction()
 	}
+}
+
+func remove(db *sql.DB) {
+	_, err := db.Exec("DELETE FROM musics WHERE id = ?;", getID())
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Println("Music removed")
+	os.Exit(0)
+}
+
+func getID() int {
+	if len(os.Args) < 3 {
+		println("Provide an ID")
+		os.Exit(1)
+	}
+	id, err := strconv.Atoi(os.Args[2])
+	if err != nil {
+		println("provide a number")
+		os.Exit(1)
+	}
+	return id
 }
 
 func printMusic(music Music) {
